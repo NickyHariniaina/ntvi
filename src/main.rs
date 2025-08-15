@@ -4,14 +4,18 @@ use actions::act::init::interactive_init;
 use arguments::args::Args;
 use clap::Parser;
 
-use crate::arguments::args::MainAction;
+use crate::{actions::act::init::init, arguments::args::MainAction};
 
 fn main() -> std::io::Result<()> {
     let args = Args::parse();
     match args.main_action {
-        MainAction::Init => {
+        MainAction::Init { path } => {
             println!("This is initialization.");
-            interactive_init()?;
+            if let Some(content) = path {
+                init(content)?;
+            } else {
+                interactive_init()?;
+            }
             Ok(())
         }
     }

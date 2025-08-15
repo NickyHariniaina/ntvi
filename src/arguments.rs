@@ -1,6 +1,6 @@
 pub mod args {
-    use clap::{Parser, Subcommand};
 
+    use clap::{Parser, Subcommand};
     #[derive(Parser)]
     #[command(name = "Naotivy (ntvim)", version = "v1.0")]
     pub struct Args {
@@ -10,6 +10,9 @@ pub mod args {
 
     #[derive(Subcommand)]
     pub enum MainAction {
-        Init,
+        Init {
+            #[arg(long, short)]
+            path: Option<String>,
+        },
     }
 }

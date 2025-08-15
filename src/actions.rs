@@ -9,7 +9,28 @@ pub mod act {
             config_path: PathBuf,
         }
 
-        pub fn init() -> std::io::Result<()> {
+        pub fn initialize_config_data(config_data: &mut Data, folder_path: String) -> &Data {
+            if let Ok(path) = create_folder_path(folder_path) {
+                config_data.folder_path = path;
+            }
+
+            if let Ok(path) = create_config_path() {
+                config_data.config_path = path;
+            }
+            config_data
+        }
+
+        pub fn init(path: String) -> std::io::Result<()> {
+            let mut config_data: Data = Data {
+                folder_path: PathBuf::new(),
+                config_path: PathBuf::new(),
+            };
+
+            let config_data = initialize_config_data(&mut config_data, path);
+            println!("Config files path {}", config_data.config_path.display());
+            println!("Naoty files path {}", config_data.folder_path.display());
+            save_config(true, config_data)?;
+
             Ok(())
         }
 
@@ -24,16 +45,10 @@ pub mod act {
                 .interact_text()
                 .unwrap();
 
-            if let Ok(path) = create_folder_path(folder_path) {
-                config_data.folder_path = path;
-            }
+            let config_data = initialize_config_data(&mut config_data, folder_path);
 
-            if let Ok(path) = create_config_path() {
-                config_data.config_path = path;
-            }
-
-            println!("{}", config_data.folder_path.display());
-            println!("{}", config_data.config_path.display());
+            println!("Config files path {}", config_data.config_path.display());
+            println!("Naoty files path {}", config_data.folder_path.display());
 
             let confirm_initialization = Confirm::new()
                 .with_prompt("Do you want to save your new configuration?")
@@ -74,25 +89,25 @@ pub mod act {
             }
         }
 
-        fn create_config_folder(config_path: PathBuf) -> std::io::Result<()> {
+        fn create_config_folder(config_path: &PathBuf) -> std::io::Result<()> {
             fs::create_dir(config_path)?;
             Ok(())
         }
 
-        fn create_naoty_folder(folder_path: PathBuf) -> std::io::Result<()> {
+        fn create_naoty_folder(folder_path: &PathBuf) -> std::io::Result<()> {
             fs::create_dir(folder_path)?;
             Ok(())
         }
 
-        fn save_config(confirmation: bool, config_data: Data) -> std::io::Result<()> {
+        fn save_config(confirmation: bool, config_data: &Data) -> std::io::Result<()> {
             if confirmation {
-                if let Ok(()) = create_config_folder(config_data.config_path) {
+                if let Ok(()) = create_config_folder(&config_data.config_path) {
                     println!("Config file created...");
                 } else {
                     println!("Config file already exists there so naoty didn't create new one.");
                 }
 
-                if let Ok(()) = create_naoty_folder(config_data.folder_path) {
+                if let Ok(()) = create_naoty_folder(&config_data.folder_path) {
                     println!("Naoty folder created...");
                 } else {
                     println!("This file already exists so naoty didn't create it.");
