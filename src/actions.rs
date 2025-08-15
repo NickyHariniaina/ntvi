@@ -1,8 +1,8 @@
 pub mod act {
     pub mod init {
-        use std::{io::ErrorKind, path::PathBuf};
+        use std::{fs, io::ErrorKind, path::PathBuf, process};
 
-        use dialoguer::Input;
+        use dialoguer::{Confirm, Input};
 
         pub struct Data {
             folder_path: PathBuf,
@@ -32,6 +32,15 @@ pub mod act {
                 config_data.config_path = path;
             }
 
+            println!("{}", config_data.folder_path.display());
+            println!("{}", config_data.config_path.display());
+
+            let confirm_initialization = Confirm::new()
+                .with_prompt("Do you want to save your new configuration?")
+                .interact()
+                .unwrap();
+
+            save_config(confirm_initialization, config_data)?;
             Ok(())
         }
 
@@ -55,7 +64,7 @@ pub mod act {
 
             match config_folder {
                 Some(mut path) => {
-                    path.push(".ntvim");
+                    path.push(".naoty");
                     Ok(path)
                 }
                 None => Err(std::io::Error::new(
@@ -63,6 +72,36 @@ pub mod act {
                     "Config file not found",
                 )),
             }
+        }
+
+        fn create_config_folder(config_path: PathBuf) -> std::io::Result<()> {
+            fs::create_dir(config_path)?;
+            Ok(())
+        }
+
+        fn create_naoty_folder(folder_path: PathBuf) -> std::io::Result<()> {
+            fs::create_dir(folder_path)?;
+            Ok(())
+        }
+
+        fn save_config(confirmation: bool, config_data: Data) -> std::io::Result<()> {
+            if confirmation {
+                if let Ok(()) = create_config_folder(config_data.config_path) {
+                    println!("Config file created...");
+                } else {
+                    println!("Config file already exists there so naoty didn't create new one.");
+                }
+
+                if let Ok(()) = create_naoty_folder(config_data.folder_path) {
+                    println!("Naoty folder created...");
+                } else {
+                    println!("This file already exists so naoty didn't create it.");
+                }
+            } else {
+                println!("Configuration aborted.");
+                process::exit(0);
+            }
+            Ok(())
         }
     }
 }
