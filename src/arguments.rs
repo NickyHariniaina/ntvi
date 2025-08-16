@@ -5,7 +5,7 @@ pub mod args {
     #[command(name = "Naotivy (ntvi)", version = "v1.0")]
     pub struct Args {
         #[command(subcommand)]
-        pub main_action: MainAction,
+        pub main_action: Option<MainAction>,
 
         #[arg(short, long)]
         config: Option<String>,

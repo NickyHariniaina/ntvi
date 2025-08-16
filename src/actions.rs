@@ -4,6 +4,7 @@ pub mod act {
 
         use dialoguer::{Confirm, Input};
 
+        #[derive(Clone)]
         pub struct Data {
             folder_path: PathBuf,
             config_path: PathBuf,
@@ -30,6 +31,7 @@ pub mod act {
             println!("Config files path {}", config_data.config_path.display());
             println!("Naoty files path {}", config_data.folder_path.display());
             save_config(true, config_data)?;
+            create_config_file(config_data)?;
 
             Ok(())
         }
@@ -56,6 +58,9 @@ pub mod act {
                 .unwrap();
 
             save_config(confirm_initialization, config_data)?;
+            if confirm_initialization {
+                create_config_file(config_data)?;
+            }
             Ok(())
         }
 
@@ -96,6 +101,13 @@ pub mod act {
 
         fn create_naoty_folder(folder_path: &PathBuf) -> std::io::Result<()> {
             fs::create_dir(folder_path)?;
+            Ok(())
+        }
+
+        fn create_config_file(config_data: &Data) -> std::io::Result<()> {
+            let mut config_folder = config_data.config_path.clone();
+            config_folder.push("config.toml");
+            fs::File::create_new(config_folder)?;
             Ok(())
         }
 

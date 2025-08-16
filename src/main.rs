@@ -10,26 +10,26 @@ use crate::{actions::act::init::init, arguments::args::MainAction, ui::editor::c
 
 fn main() -> std::io::Result<()> {
     let args = Args::parse();
+
     match args.main_action {
-        MainAction::Init { path } => {
-            match path {
-                Some(p) => {
-                    init(p)?;
+        Some(action) => match action {
+            MainAction::Init { path } => {
+                match path {
+                    Some(p) => init(p)?,
+                    None => interactive_init()?,
                 }
-                None => {
-                    interactive_init()?;
-                }
+                Ok(())
             }
-            Ok(())
-        }
-        MainAction::Create { file_name } => Ok(()),
-        MainAction::Open { file_name } => {
-            create_editor()?;
-            Ok(())
-        }
-        MainAction::New => {
-            create_editor()?;
-            Ok(())
-        }
+            MainAction::Create { file_name } => Ok(()),
+            MainAction::Open { file_name } => {
+                create_editor()?;
+                Ok(())
+            }
+            MainAction::New => {
+                create_editor()?;
+                Ok(())
+            }
+        },
+        None => Ok(()),
     }
 }
