@@ -1,11 +1,14 @@
 pub mod args {
 
-    use clap::{Parser, Subcommand};
+    use clap::{ArgGroup, Parser, Subcommand};
     #[derive(Parser)]
-    #[command(name = "Naotivy (ntvim)", version = "v1.0")]
+    #[command(name = "Naotivy (ntvi)", version = "v1.0")]
     pub struct Args {
         #[command(subcommand)]
         pub main_action: MainAction,
+
+        #[arg(short, long)]
+        config: String,
     }
 
     #[derive(Subcommand)]
@@ -14,6 +17,12 @@ pub mod args {
             #[arg(long, short)]
             path: Option<String>,
         },
-        Create,
+        Create {
+            file_name: String,
+        },
+        New,
+        Open {
+            file_name: String,
+        },
     }
 }

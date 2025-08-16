@@ -125,11 +125,8 @@ pub mod act {
     }
 
     pub mod create {
-
-        pub fn create_new_session() -> std::io::Result<()> {
+        pub fn create_new_file(path: &String) -> std::io::Result<()> {
             Ok(())
         }
-
-        fn open_editor() {}
     }
 }

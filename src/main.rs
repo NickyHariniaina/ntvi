@@ -12,16 +12,22 @@ fn main() -> std::io::Result<()> {
     let args = Args::parse();
     match args.main_action {
         MainAction::Init { path } => {
-            println!("This is initialization.");
-            if let Some(content) = path {
-                init(content)?;
-            } else {
-                interactive_init()?;
+            match path {
+                Some(p) => {
+                    init(p)?;
+                }
+                None => {
+                    interactive_init()?;
+                }
             }
             Ok(())
         }
-        MainAction::Create => {
-            println!("Create file");
+        MainAction::Create { file_name } => Ok(()),
+        MainAction::Open { file_name } => {
+            create_editor()?;
+            Ok(())
+        }
+        MainAction::New => {
             create_editor()?;
             Ok(())
         }
