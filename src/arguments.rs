@@ -8,7 +8,7 @@ pub mod args {
         pub main_action: MainAction,
 
         #[arg(short, long)]
-        config: String,
+        config: Option<String>,
     }
 
     #[derive(Subcommand)]
