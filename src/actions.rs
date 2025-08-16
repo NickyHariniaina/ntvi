@@ -1,10 +1,11 @@
 pub mod act {
     pub mod init {
+        use dialoguer::{Confirm, Input};
+        use serde::Deserialize;
+        use serde::Serialize;
         use std::{fs, io::ErrorKind, path::PathBuf, process};
 
-        use dialoguer::{Confirm, Input};
-
-        #[derive(Clone)]
+        #[derive(Clone, Deserialize, Serialize)]
         pub struct Data {
             folder_path: PathBuf,
             config_path: PathBuf,
@@ -32,6 +33,7 @@ pub mod act {
             println!("Naoty files path {}", config_data.folder_path.display());
             save_config(true, config_data)?;
             create_config_file(config_data)?;
+            write_config_file(config_data)?;
 
             Ok(())
         }
@@ -60,6 +62,7 @@ pub mod act {
             save_config(confirm_initialization, config_data)?;
             if confirm_initialization {
                 create_config_file(config_data)?;
+                write_config_file(config_data)?;
             }
             Ok(())
         }
@@ -95,20 +98,45 @@ pub mod act {
         }
 
         fn create_config_folder(config_path: &PathBuf) -> std::io::Result<()> {
-            fs::create_dir(config_path)?;
+            fs::create_dir_all(config_path)?;
             Ok(())
         }
 
         fn create_naoty_folder(folder_path: &PathBuf) -> std::io::Result<()> {
-            fs::create_dir(folder_path)?;
+            fs::create_dir_all(folder_path)?;
             Ok(())
         }
 
         fn create_config_file(config_data: &Data) -> std::io::Result<()> {
             let mut config_folder = config_data.config_path.clone();
             config_folder.push("config.toml");
-            fs::File::create_new(config_folder)?;
+            fs::File::create(config_folder)?;
             Ok(())
+        }
+
+        pub fn get_config_file() -> std::io::Result<PathBuf> {
+            let config_file_path = dirs::config_dir();
+            if let Some(mut config_file) = config_file_path {
+                config_file.push(".naoty");
+                config_file.push("config.toml");
+                Ok(config_file)
+            } else {
+                Err(std::io::Error::new(
+                    ErrorKind::NotFound,
+                    "No config file found",
+                ))
+            }
+        }
+
+        fn write_config_file(config_data: &Data) -> std::io::Result<String> {
+            let config_file = get_config_file()?;
+            let config_content =
+                toml::to_string(config_data).map_err(|_e| std::io::Error::other("Cannot write"))?;
+
+            println!("{}", config_content);
+            println!("Config path {}", config_file.display());
+            fs::write(config_file, config_content)?;
+            Ok("File created".to_string())
         }
 
         fn save_config(confirmation: bool, config_data: &Data) -> std::io::Result<()> {
@@ -129,10 +157,6 @@ pub mod act {
                 process::exit(0);
             }
             Ok(())
-        }
-
-        fn _write_config_information() {
-            todo!("This should write folder path in .config/.naoty");
         }
     }
 
