@@ -14,5 +14,6 @@ pub mod args {
             #[arg(long, short)]
             path: Option<String>,
         },
+        Create,
     }
 }

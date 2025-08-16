@@ -1,10 +1,12 @@
 mod actions;
 mod arguments;
+mod ui;
+
 use actions::act::init::interactive_init;
 use arguments::args::Args;
 use clap::Parser;
 
-use crate::{actions::act::init::init, arguments::args::MainAction};
+use crate::{actions::act::init::init, arguments::args::MainAction, ui::editor::create_editor};
 
 fn main() -> std::io::Result<()> {
     let args = Args::parse();
@@ -16,6 +18,11 @@ fn main() -> std::io::Result<()> {
             } else {
                 interactive_init()?;
             }
+            Ok(())
+        }
+        MainAction::Create => {
+            println!("Create file");
+            create_editor()?;
             Ok(())
         }
     }

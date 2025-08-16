@@ -118,5 +118,18 @@ pub mod act {
             }
             Ok(())
         }
+
+        fn _write_config_information() {
+            todo!("This should write folder path in .config/.naoty");
+        }
+    }
+
+    pub mod create {
+
+        pub fn create_new_session() -> std::io::Result<()> {
+            Ok(())
+        }
+
+        fn open_editor() {}
     }
 }
