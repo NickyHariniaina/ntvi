@@ -24,5 +24,6 @@ pub mod args {
         Open {
             file_name: String,
         },
+        List,
     }
 }

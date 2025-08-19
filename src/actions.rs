@@ -3,7 +3,9 @@ pub mod act {
         use dialoguer::{Confirm, Input};
         use serde::Deserialize;
         use serde::Serialize;
+        use std::error::Error;
         use std::{fs, io::ErrorKind, path::PathBuf, process};
+        use toml::Value;
 
         #[derive(Clone, Deserialize, Serialize)]
         pub struct Data {
@@ -158,10 +160,26 @@ pub mod act {
             }
             Ok(())
         }
+
+        pub fn read_config_file() -> Result<(), Box<dyn Error>> {
+            let config_path = get_config_file();
+            if let Ok(path) = config_path {
+                println!("{}", path.display());
+                let stringified_toml = fs::read_to_string(path)?;
+                let toml_content: Value = toml::from_str(&stringified_toml)?;
+                println!("{}", toml_content["folder_path"].as_str().unwrap());
+            }
+            Ok(())
+        }
     }
 
     pub mod create {
-        pub fn create_new_file(path: &String) -> std::io::Result<()> {
+        use std::error::Error;
+
+        use crate::actions::act::init::read_config_file;
+
+        pub fn create_new_file() -> Result<(), Box<dyn Error>> {
+            read_config_file()?;
             Ok(())
         }
     }
