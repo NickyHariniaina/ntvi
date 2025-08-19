@@ -181,14 +181,14 @@ pub mod act {
     }
 
     pub mod create {
-        use std::{error::Error, path::PathBuf};
+        use std::{error::Error, fs};
 
         use crate::actions::act::init::read_config_file_for_doc_path;
 
         pub fn create_new_file(file_name: String) -> Result<(), Box<dyn Error>> {
             if let Ok(mut doc_path) = read_config_file_for_doc_path() {
                 doc_path.push(file_name);
-                println!("{}", doc_path.display());
+                fs::File::create(doc_path)?;
             }
             Ok(())
         }
