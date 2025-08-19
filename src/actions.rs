@@ -3,6 +3,7 @@ pub mod act {
         use dialoguer::{Confirm, Input};
         use serde::Deserialize;
         use serde::Serialize;
+
         use std::error::Error;
         use std::{fs, io::ErrorKind, path::PathBuf, process};
         use toml::Value;
@@ -161,25 +162,34 @@ pub mod act {
             Ok(())
         }
 
-        pub fn read_config_file() -> Result<(), Box<dyn Error>> {
+        pub fn read_config_file_for_doc_path() -> Result<PathBuf, Box<dyn Error>> {
             let config_path = get_config_file();
             if let Ok(path) = config_path {
                 println!("{}", path.display());
                 let stringified_toml = fs::read_to_string(path)?;
                 let toml_content: Value = toml::from_str(&stringified_toml)?;
-                println!("{}", toml_content["folder_path"].as_str().unwrap());
+                if let Some(doc_path) = toml_content.get("folder_path") {
+                    let doc_path = doc_path.as_str();
+                    if let Some(path) = doc_path {
+                        let path = PathBuf::from(path);
+                        return Ok(path);
+                    }
+                }
             }
-            Ok(())
+            Err("Missing folder path".into())
         }
     }
 
     pub mod create {
-        use std::error::Error;
+        use std::{error::Error, path::PathBuf};
 
-        use crate::actions::act::init::read_config_file;
+        use crate::actions::act::init::read_config_file_for_doc_path;
 
-        pub fn create_new_file() -> Result<(), Box<dyn Error>> {
-            read_config_file()?;
+        pub fn create_new_file(file_name: String) -> Result<(), Box<dyn Error>> {
+            if let Ok(mut doc_path) = read_config_file_for_doc_path() {
+                doc_path.push(file_name);
+                println!("{}", doc_path.display());
+            }
             Ok(())
         }
     }

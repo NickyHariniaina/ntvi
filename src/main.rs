@@ -9,7 +9,10 @@ use arguments::args::Args;
 use clap::Parser;
 
 use crate::{
-    actions::act::init::{init, read_config_file},
+    actions::act::{
+        create::create_new_file,
+        init::{init, read_config_file_for_doc_path},
+    },
     arguments::args::MainAction,
     ui::editor::create_editor,
 };
@@ -27,7 +30,7 @@ fn main() -> Result<(), Box<dyn Error>> {
                 Ok(())
             }
             MainAction::Create { file_name } => {
-                read_config_file()?;
+                create_new_file(file_name)?;
                 Ok(())
             }
             MainAction::Open { file_name } => {
