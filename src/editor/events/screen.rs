@@ -4,11 +4,11 @@ use crossterm::{cursor::MoveTo, execute, terminal};
 
 use crate::editor::{events::key::handle_key, ui::create_editor};
 
-pub fn open_editor() -> Result<(), Box<dyn Error>> {
+pub fn open_editor(mut buffer: String) -> Result<(), Box<dyn Error>> {
     terminal::enable_raw_mode()?;
     create_editor()?;
     move_cursor_at_start()?;
-    handle_key()?;
+    handle_key(buffer)?;
     terminal::disable_raw_mode()?;
     Ok(())
 }

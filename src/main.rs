@@ -42,7 +42,8 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::New => {
-                open_editor()?;
+                let mut buffer = String::new();
+                open_editor(buffer)?;
                 return Ok(());
             }
             MainAction::List => {
