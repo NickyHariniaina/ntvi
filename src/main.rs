@@ -43,6 +43,8 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::New => {
+                // TODO:
+                // - Save buffer in a new file.
                 new()?;
                 return Ok(());
             }
