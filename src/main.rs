@@ -10,7 +10,9 @@ use crate::{
         list::list_files,
         remove::remove_file,
     },
+    editor::ui::{create_editor, open_editor},
 };
+mod editor;
 
 mod arguments;
 mod commands;
@@ -41,6 +43,7 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::New => {
+                open_editor()?;
                 return Ok(());
             }
             MainAction::List => {
