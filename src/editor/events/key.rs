@@ -14,9 +14,10 @@ pub fn handle_key() -> Result<(), Box<dyn Error>> {
                     print!("Key pressed");
                     break 'handle_key;
                 }
-                _ => {
-                    print!("pressed");
+                KeyCode::Char(key_pressed) => {
+                    print!("{}", key_pressed);
                 }
+                _ => {}
             }
         }
         stdout().flush()?;
