@@ -1,4 +1,4 @@
-use std::{error::Error, fs, io::Write};
+use std::{error::Error, fs};
 
 use crate::commands::init::read_config_file_for_doc_path;
 

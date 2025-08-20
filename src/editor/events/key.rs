@@ -1,4 +1,3 @@
-use crossterm::cursor::MoveDown;
 use crossterm::cursor::MoveTo;
 use crossterm::cursor::MoveToColumn;
 use crossterm::event;
