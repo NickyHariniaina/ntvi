@@ -3,9 +3,13 @@ use crossterm::event;
 use crossterm::event::Event;
 use crossterm::event::KeyCode;
 use crossterm::execute;
+use dialoguer::Confirm;
+use dialoguer::Input;
 use std::error::Error;
 use std::io::Write;
 use std::io::stdout;
+
+use crate::editor::events::file::save;
 
 pub fn handle_key(mut buffer: String) -> Result<(), Box<dyn Error>> {
     'handle_key: loop {
@@ -35,6 +39,17 @@ pub fn handle_key(mut buffer: String) -> Result<(), Box<dyn Error>> {
         }
         stdout().flush()?;
     }
-    println!("{}", buffer);
+    prompt_save(buffer)?;
+    Ok(())
+}
+
+pub fn prompt_save(buffer: String) -> Result<(), Box<dyn Error>> {
+    let confirmation = Confirm::new()
+        .with_prompt("Do you want to save?")
+        .interact()?;
+    if confirmation {
+        let file_name: String = Input::new().with_prompt("Save as").interact()?;
+        save(file_name, buffer)?;
+    }
     Ok(())
 }

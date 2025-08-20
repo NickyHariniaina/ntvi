@@ -15,6 +15,6 @@ pub fn open_editor(buffer: String) -> Result<(), Box<dyn Error>> {
 
 pub fn move_cursor_at_start() -> Result<(), Box<dyn Error>> {
     let mut stdout = stdout();
-    execute!(stdout, MoveTo(0, 1))?;
+    execute!(stdout, MoveTo(0, 0))?;
     Ok(())
 }
