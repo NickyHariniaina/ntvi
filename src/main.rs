@@ -8,6 +8,7 @@ use crate::{
         create::create_new_file,
         init::{init, interactive_init},
         list::list_files,
+        new::new,
         remove::remove_file,
     },
     editor::events::screen::open_editor,
@@ -42,8 +43,7 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::New => {
-                let mut buffer = String::new();
-                open_editor(buffer)?;
+                new()?;
                 return Ok(());
             }
             MainAction::List => {
