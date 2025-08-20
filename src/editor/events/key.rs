@@ -1,6 +1,10 @@
+use crossterm::cursor::MoveLeft;
+use crossterm::cursor::MoveToColumn;
+use crossterm::cursor::MoveToRow;
 use crossterm::event;
 use crossterm::event::Event;
 use crossterm::event::KeyCode;
+use crossterm::execute;
 use std::error::Error;
 use std::io::Write;
 use std::io::stdout;
@@ -21,6 +25,10 @@ pub fn handle_key() -> Result<(), Box<dyn Error>> {
                     print!("\x08");
                     print!(" ");
                     print!("\x08");
+                }
+                KeyCode::Enter => {
+                    println!();
+                    execute!(stdout(), MoveToColumn(0))?;
                 }
                 _ => {}
             }
