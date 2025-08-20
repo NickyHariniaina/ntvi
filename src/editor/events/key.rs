@@ -17,6 +17,11 @@ pub fn handle_key() -> Result<(), Box<dyn Error>> {
                 KeyCode::Char(key_pressed) => {
                     print!("{}", key_pressed);
                 }
+                KeyCode::Backspace => {
+                    print!("\x08");
+                    print!(" ");
+                    print!("\x08");
+                }
                 _ => {}
             }
         }
