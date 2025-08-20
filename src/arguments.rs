@@ -1,6 +1,6 @@
 pub mod args {
 
-    use clap::{ArgGroup, Parser, Subcommand};
+    use clap::{Parser, Subcommand};
     #[derive(Parser)]
     #[command(name = "Naotivy (ntvi)", version = "v1.0")]
     pub struct Args {

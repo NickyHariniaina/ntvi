@@ -10,12 +10,11 @@ use crate::{
         list::list_files,
         remove::remove_file,
     },
-    editor::ui::{create_editor, open_editor},
+    editor::events::screen::open_editor,
 };
-mod editor;
-
 mod arguments;
 mod commands;
+mod editor;
 
 fn main() -> Result<(), Box<dyn Error>> {
     run()?;
