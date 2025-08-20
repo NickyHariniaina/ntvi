@@ -1,51 +1,52 @@
-mod actions;
-mod arguments;
-mod ui;
-
 use std::error::Error;
 
-use actions::act::init::interactive_init;
-use arguments::args::Args;
 use clap::Parser;
 
 use crate::{
-    actions::act::{
+    arguments::args::{Args, MainAction},
+    commands::{
         create::create_new_file,
-        init::{init, read_config_file_for_doc_path},
+        init::{init, interactive_init},
     },
-    arguments::args::MainAction,
-    ui::editor::create_editor,
 };
 
-fn main() -> Result<(), Box<dyn Error>> {
-    let args = Args::parse();
+mod arguments;
+mod commands;
 
-    match args.main_action {
-        Some(action) => match action {
+fn main() -> Result<(), Box<dyn Error>> {
+    run()?;
+    Ok(())
+}
+
+fn run() -> Result<(), Box<(dyn Error)>> {
+    let args = Args::parse();
+    if let Some(action) = args.main_action {
+        match action {
             MainAction::Init { path } => {
-                match path {
-                    Some(p) => init(p)?,
-                    None => interactive_init()?,
+                if let Some(file_path) = path {
+                    init(file_path)?;
+                } else {
+                    interactive_init()?;
                 }
-                Ok(())
+                return Ok(());
             }
             MainAction::Create { file_name } => {
                 create_new_file(file_name)?;
-                Ok(())
+                return Ok(());
             }
-            MainAction::Open { file_name } => {
-                create_editor()?;
-                Ok(())
+            MainAction::Remove { file_name } => {
+                return Ok(());
             }
             MainAction::New => {
-                create_editor()?;
-                Ok(())
+                return Ok(());
             }
             MainAction::List => {
-                println!("This is a list of every ntvi notes");
-                Ok(())
+                return Ok(());
             }
-        },
-        None => Ok(()),
+            MainAction::Open { file_name } => {
+                return Ok(());
+            }
+        }
     }
+    Ok(())
 }

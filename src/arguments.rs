@@ -20,6 +20,9 @@ pub mod args {
         Create {
             file_name: String,
         },
+        Remove {
+            file_name: String,
+        },
         New,
         Open {
             file_name: String,
