@@ -9,9 +9,9 @@ use crate::{
         init::{init, interactive_init},
         list::list_files,
         new::new,
+        open::open,
         remove::remove_file,
     },
-    editor::events::screen::open_editor,
 };
 mod arguments;
 mod commands;
@@ -51,6 +51,7 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::Open { file_name } => {
+                open(file_name)?;
                 return Ok(());
             }
         }
