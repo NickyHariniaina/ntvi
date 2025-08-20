@@ -7,6 +7,7 @@ use crate::{
     commands::{
         create::create_new_file,
         init::{init, interactive_init},
+        remove::remove_file,
     },
 };
 
@@ -35,6 +36,7 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::Remove { file_name } => {
+                remove_file(file_name)?;
                 return Ok(());
             }
             MainAction::New => {
