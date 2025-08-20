@@ -7,6 +7,7 @@ use crate::{
     commands::{
         create::create_new_file,
         init::{init, interactive_init},
+        list::list_files,
         remove::remove_file,
     },
 };
@@ -43,6 +44,7 @@ fn run() -> Result<(), Box<(dyn Error)>> {
                 return Ok(());
             }
             MainAction::List => {
+                list_files()?;
                 return Ok(());
             }
             MainAction::Open { file_name } => {

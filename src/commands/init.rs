@@ -163,7 +163,6 @@ fn save_config(confirmation: bool, config_data: &Data) -> std::io::Result<()> {
 pub fn read_config_file_for_doc_path() -> Result<PathBuf, Box<dyn Error>> {
     let config_path = get_config_file();
     if let Ok(path) = config_path {
-        println!("{}", path.display());
         let stringified_toml = fs::read_to_string(path)?;
         let toml_content: Value = toml::from_str(&stringified_toml)?;
         if let Some(doc_path) = toml_content.get("folder_path") {
