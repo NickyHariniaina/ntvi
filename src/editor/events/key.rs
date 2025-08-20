@@ -1,8 +1,12 @@
+use crossterm::cursor::MoveDown;
+use crossterm::cursor::MoveTo;
 use crossterm::cursor::MoveToColumn;
 use crossterm::event;
 use crossterm::event::Event;
 use crossterm::event::KeyCode;
 use crossterm::execute;
+use crossterm::terminal;
+use crossterm::terminal::Clear;
 use dialoguer::Confirm;
 use dialoguer::Input;
 use std::error::Error;
@@ -38,6 +42,11 @@ pub fn handle_key(mut buffer: String) -> Result<(), Box<dyn Error>> {
             }
         }
         stdout().flush()?;
+    }
+    let terminal_length = terminal::size();
+    if let Ok((_col, row)) = terminal_length {
+        execute!(stdout(), Clear(terminal::ClearType::All))?;
+        execute!(stdout(), MoveTo(0, row))?;
     }
     prompt_save(buffer)?;
     Ok(())
