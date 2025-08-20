@@ -57,6 +57,7 @@ pub fn prompt_save(buffer: String) -> Result<(), Box<dyn Error>> {
         .with_prompt("Do you want to save?")
         .interact()?;
     if confirmation {
+        execute!(stdout(), MoveToColumn(0))?;
         let file_name: String = Input::new().with_prompt("Save as").interact()?;
         save(file_name, buffer)?;
     }
