@@ -25,24 +25,23 @@ pub fn handle_key(mut buffer: String) -> Result<(), Box<dyn Error>> {
                     buffer.push(key_pressed);
                 }
                 KeyCode::Backspace => {
-                    if buffer.is_empty() {
-                        return Ok(());
-                    }
+                    if !buffer.is_empty() {
+                        let deleted_char_in_buffer = buffer.pop().unwrap();
 
-                    let deleted_char_in_buffer = buffer.pop().unwrap();
+                        if deleted_char_in_buffer == '\n' {
+                            let last_lines_length =
+                                buffer.lines().last().map(|l| l.len()).unwrap_or(0);
 
-                    if deleted_char_in_buffer == '\n' {
-                        let last_lines_length = buffer.lines().last().map(|l| l.len()).unwrap_or(0);
-
-                        execute!(
-                            stdout(),
-                            cursor::MoveToPreviousLine(1),
-                            cursor::MoveToColumn(last_lines_length as u16)
-                        )?;
-                    } else {
-                        print!("\x08");
-                        print!(" ");
-                        print!("\x08");
+                            execute!(
+                                stdout(),
+                                cursor::MoveToPreviousLine(1),
+                                cursor::MoveToColumn(last_lines_length as u16)
+                            )?;
+                        } else {
+                            print!("\x08");
+                            print!(" ");
+                            print!("\x08");
+                        }
                     }
                 }
                 KeyCode::Enter => {
