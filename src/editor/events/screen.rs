@@ -12,13 +12,13 @@ pub fn open_editor(buffer: String, has_file_attached: bool) -> Result<(), Box<dy
     terminal::enable_raw_mode()?;
     create_editor()?;
     move_cursor_at_start()?;
-
+    let mut current_col: u16 = 0;
     if has_file_attached {
-        let current_col = print_text(&buffer)?;
-        move_cursor_at_end_of_line(&current_col + 1)?;
+        current_col = print_text(&buffer)?;
+        move_cursor_at_end_of_line(current_col + 1)?;
     }
 
-    handle_key(buffer)?;
+    handle_key(buffer, current_col)?;
     terminal::disable_raw_mode()?;
     Ok(())
 }
