@@ -1,16 +1,14 @@
-use crossterm::cursor::MoveTo;
-use crossterm::cursor::MoveToColumn;
-use crossterm::event;
-use crossterm::event::Event;
-use crossterm::event::KeyCode;
-use crossterm::execute;
-use crossterm::terminal;
-use crossterm::terminal::Clear;
-use dialoguer::Confirm;
-use dialoguer::Input;
-use std::error::Error;
-use std::io::Write;
-use std::io::stdout;
+use crossterm::{
+    cursor::{self, MoveTo, MoveToColumn},
+    event::{self, Event, KeyCode},
+    execute,
+    terminal::{self, Clear},
+};
+use dialoguer::{Confirm, Input};
+use std::{
+    error::Error,
+    io::{Write, stdout},
+};
 
 use crate::editor::events::file::save;
 
@@ -27,10 +25,25 @@ pub fn handle_key(mut buffer: String) -> Result<(), Box<dyn Error>> {
                     buffer.push(key_pressed);
                 }
                 KeyCode::Backspace => {
-                    print!("\x08");
-                    print!(" ");
-                    print!("\x08");
-                    buffer.pop();
+                    if buffer.is_empty() {
+                        return Ok(());
+                    }
+
+                    let deleted_char_in_buffer = buffer.pop().unwrap();
+
+                    if deleted_char_in_buffer == '\n' {
+                        let last_lines_length = buffer.lines().last().map(|l| l.len()).unwrap_or(0);
+
+                        execute!(
+                            stdout(),
+                            cursor::MoveToPreviousLine(1),
+                            cursor::MoveToColumn(last_lines_length as u16)
+                        )?;
+                    } else {
+                        print!("\x08");
+                        print!(" ");
+                        print!("\x08");
+                    }
                 }
                 KeyCode::Enter => {
                     println!();
